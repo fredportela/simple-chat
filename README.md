@@ -9,7 +9,7 @@ $npm i
 ### Running server
 
 ```
-$npm start (liveload)
+$npm start
 ```
 
 ## Built With
