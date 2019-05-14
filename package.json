@@ -1,0 +1,26 @@
+{
+  "name": "simple-chat",
+  "version": "1.0.0",
+  "description": "Simple Chat with socket.io and express",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "server",
+    "chat",
+    "socket.io",
+    "express"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fredportela/videoflix-server"
+  },
+  "author": "FredPortela",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "socket.io": "^2.2.0"
+  }
+}

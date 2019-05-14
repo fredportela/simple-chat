@@ -1,0 +1,86 @@
+<html>
+   <head>
+        <title>Simple Chat</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src=/socket.io/socket.io.js></script>
+        <script>
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+
+            $().ready(function() {
+                var socket = io('http://localhost:3000');
+                if(socket) {
+                    var nickname = getUrlParameter('nickname');
+                    $('#nickname').val(nickname);
+
+                    socket.emit('welcome', { name: nickname });
+
+                    socket.on('online', function(online) {
+                        $('#online').html(online);
+                    });
+
+                    socket.on('welcome', (data) => {
+                        $('#console').append(`<p>${data.time} - ${data.name} ${data.message}</p>`);
+                    });
+
+                    socket.on('left', (data) => {
+                        $('#console').append(`<p>${data.time} - ${data.name} ${data.message}</p>`);
+                    });
+
+                    socket.on('message', (data) => {
+                        $('#console').append(`<p>${data.time} - ${data.name}: ${data.message}</p>`);
+                    });
+                }
+
+                $('#enviar').click(function() {
+                    var nickname = $('#nickname').val();
+                    var message = $('#message').val();
+                    socket.emit('message', { name: nickname, message });
+                    $('#message').val('');
+                });
+            });
+        </script>
+        <style>
+            #console {
+                margin: 10px 0;
+            }
+            #console p {
+                padding: 5px 0;
+                margin: 0;
+            }
+            #console p:nth-child(odd) {
+                background-color: #d3d3d3;
+            }
+
+            #console p:nth-child(even) {
+                background-color: #d9d9d9;
+            }
+        </style>
+   </head>
+   <body>
+        <input type="hidden" name="nickname" id="nickname" />
+        <code id="p-online">
+            <p>Pessoas Online: <span id="online">0</span></p>    
+        </code>
+        
+        <div id="console" style="max-height: 200px; overflow: auto;"></div>
+
+        <div id="chat">
+            <label>Mensagem:</label>
+            <textarea name="message" id="message" style="width: 100%" rows="5"></textarea>
+            <button id="enviar">ENVIAR</button>
+        </div>
+   </body>
+ </html>
